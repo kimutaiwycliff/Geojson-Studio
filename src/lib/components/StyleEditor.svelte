@@ -1,131 +1,79 @@
-<script>
+<script lang="ts">
 	import { layers, updateLayerStyle } from '$lib/stores/layers.js';
 	import { activeLayerId } from '$lib/stores/ui.js';
 	import { derived } from 'svelte/store';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import { Slider } from '$lib/components/ui/slider/index.js';
 
-	const activeLayer = derived([layers, activeLayerId], ([$layers, $id]) =>
-		$layers.find((l) => l.id === $id) ?? null
+	const activeLayer = derived([layers, activeLayerId], ([$layers, $id]: any[]) =>
+		$layers.find((l: any) => l.id === $id) ?? null
 	);
 
-	function update(key, value) {
+	function update(key: string, value: any) {
 		if ($activeLayer) updateLayerStyle($activeLayer.id, { [key]: value });
 	}
 </script>
 
 {#if $activeLayer}
-	<div class="style-editor">
-		<div class="section-title">Style — {$activeLayer.name}</div>
+	<div class="flex flex-col gap-4 p-3">
+		<p class="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
+			Style — {$activeLayer.name}
+		</p>
 
-		<div class="row">
-			<label for="fill-color">Fill color</label>
+		<!-- Fill color -->
+		<div class="flex items-center justify-between gap-3">
+			<Label for="fill-color" class="text-xs shrink-0">Fill color</Label>
 			<input
 				id="fill-color"
 				type="color"
 				value={$activeLayer.style.fillColor}
-				oninput={(e) => update('fillColor', e.target.value)}
+				oninput={(e) => update('fillColor', (e.target as HTMLInputElement).value)}
+				class="h-7 w-8 cursor-pointer rounded border border-border bg-background p-0.5"
 			/>
 		</div>
 
-		<div class="row">
-			<label for="stroke-color">Stroke color</label>
+		<!-- Stroke color -->
+		<div class="flex items-center justify-between gap-3">
+			<Label for="stroke-color" class="text-xs shrink-0">Stroke color</Label>
 			<input
 				id="stroke-color"
 				type="color"
 				value={$activeLayer.style.strokeColor}
-				oninput={(e) => update('strokeColor', e.target.value)}
+				oninput={(e) => update('strokeColor', (e.target as HTMLInputElement).value)}
+				class="h-7 w-8 cursor-pointer rounded border border-border bg-background p-0.5"
 			/>
 		</div>
 
-		<div class="row">
-			<label for="opacity">Opacity <span class="val">{$activeLayer.style.opacity.toFixed(2)}</span></label>
-			<input
+		<!-- Opacity -->
+		<div class="flex flex-col gap-1.5">
+			<div class="flex justify-between">
+				<Label for="opacity" class="text-xs">Opacity</Label>
+				<span class="font-mono text-[11px] text-muted-foreground">{$activeLayer.style.opacity.toFixed(2)}</span>
+			</div>
+			<Slider
 				id="opacity"
-				type="range"
-				min="0"
-				max="1"
-				step="0.05"
-				value={$activeLayer.style.opacity}
-				oninput={(e) => update('opacity', parseFloat(e.target.value))}
+				min={0} max={1} step={0.05}
+				value={[$activeLayer.style.opacity]}
+				onValueChange={(v) => update('opacity', v[0])}
 			/>
 		</div>
 
-		<div class="row">
-			<label for="point-radius">Point radius <span class="val">{$activeLayer.style.pointRadius}px</span></label>
-			<input
+		<!-- Point radius -->
+		<div class="flex flex-col gap-1.5">
+			<div class="flex justify-between">
+				<Label for="point-radius" class="text-xs">Point radius</Label>
+				<span class="font-mono text-[11px] text-muted-foreground">{$activeLayer.style.pointRadius}px</span>
+			</div>
+			<Slider
 				id="point-radius"
-				type="range"
-				min="2"
-				max="20"
-				step="1"
-				value={$activeLayer.style.pointRadius}
-				oninput={(e) => update('pointRadius', parseInt(e.target.value))}
+				min={2} max={20} step={1}
+				value={[$activeLayer.style.pointRadius]}
+				onValueChange={(v) => update('pointRadius', v[0])}
 			/>
 		</div>
 	</div>
 {:else}
-	<div class="empty-state">Select a layer to edit its style.</div>
+	<p class="px-4 py-5 text-center text-xs text-muted-foreground">
+		Select a layer to edit its style.
+	</p>
 {/if}
-
-<style>
-	.style-editor {
-		padding: 12px;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.section-title {
-		font-size: 11px;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-		color: var(--text-muted);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-
-	label {
-		font-size: 13px;
-		color: var(--text);
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		flex-shrink: 0;
-	}
-
-	.val {
-		font-size: 11px;
-		color: var(--text-muted);
-		font-family: ui-monospace, monospace;
-	}
-
-	input[type='range'] {
-		flex: 1;
-		accent-color: var(--accent);
-	}
-
-	input[type='color'] {
-		width: 32px;
-		height: 28px;
-		padding: 2px;
-		border: 1px solid var(--border);
-		border-radius: 4px;
-		cursor: pointer;
-		background: var(--surface);
-	}
-
-	.empty-state {
-		padding: 20px 12px;
-		color: var(--text-muted);
-		font-size: 13px;
-		text-align: center;
-	}
-</style>

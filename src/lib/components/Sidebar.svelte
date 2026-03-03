@@ -1,140 +1,63 @@
-<script>
+<script lang="ts">
 	import { sidebarOpen } from '$lib/stores/ui.js';
 	import JsonEditor from './JsonEditor.svelte';
 	import LayerList from './LayerList.svelte';
 	import StyleEditor from './StyleEditor.svelte';
 	import TurfPanel from './TurfPanel.svelte';
-
-	let activeTab = $state('editor'); // 'editor' | 'layers' | 'turf'
-
-	const TABS = [
-		{ id: 'editor', label: 'Editor' },
-		{ id: 'layers', label: 'Layers' },
-		{ id: 'turf', label: 'Turf' }
-	];
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Separator } from '$lib/components/ui/separator/index.js';
 </script>
 
 {#if $sidebarOpen}
-	<aside class="sidebar">
-		<nav class="tabs">
-			{#each TABS as tab}
-				<button
-					class="tab-btn"
-					class:active={activeTab === tab.id}
-					onclick={() => (activeTab = tab.id)}
+	<aside class="absolute left-0 top-0 bottom-0 z-10 flex w-[var(--sidebar-w)] flex-col border-r bg-background shadow-sm">
+		<Tabs.Root value="editor" class="flex flex-1 flex-col overflow-hidden">
+			<div class="flex items-center border-b bg-muted/40">
+				<Tabs.List class="h-10 rounded-none bg-transparent px-1 gap-0">
+					<Tabs.Trigger value="editor" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+						Editor
+					</Tabs.Trigger>
+					<Tabs.Trigger value="layers" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+						Layers
+					</Tabs.Trigger>
+					<Tabs.Trigger value="turf" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+						Turf
+					</Tabs.Trigger>
+				</Tabs.List>
+				<Button
+					variant="ghost"
+					size="icon-sm"
+					class="ml-auto mr-1 text-muted-foreground"
+					onclick={() => sidebarOpen.set(false)}
+					title="Collapse sidebar"
 				>
-					{tab.label}
-				</button>
-			{/each}
-			<button class="tab-btn collapse-btn" onclick={() => sidebarOpen.set(false)} title="Collapse sidebar">
-				‹
-			</button>
-		</nav>
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+				</Button>
+			</div>
 
-		<div class="panel">
-			{#if activeTab === 'editor'}
+			<Tabs.Content value="editor" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
 				<JsonEditor />
-			{:else if activeTab === 'layers'}
-				<div class="layers-panel">
-					<LayerList />
-					<div class="divider"></div>
-					<StyleEditor />
-				</div>
-			{:else if activeTab === 'turf'}
+			</Tabs.Content>
+
+			<Tabs.Content value="layers" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
+				<LayerList />
+				<Separator />
+				<StyleEditor />
+			</Tabs.Content>
+
+			<Tabs.Content value="turf" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
 				<TurfPanel />
-			{/if}
-		</div>
+			</Tabs.Content>
+		</Tabs.Root>
 	</aside>
 {:else}
-	<button class="expand-btn" onclick={() => sidebarOpen.set(true)} title="Expand sidebar">›</button>
+	<Button
+		variant="outline"
+		size="icon-sm"
+		class="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-l-none border-l-0"
+		onclick={() => sidebarOpen.set(true)}
+		title="Expand sidebar"
+	>
+		<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+	</Button>
 {/if}
-
-<style>
-	.sidebar {
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		width: var(--sidebar-w);
-		background: var(--surface);
-		border-right: 1px solid var(--border);
-		display: flex;
-		flex-direction: column;
-		z-index: 100;
-		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
-	}
-
-	.tabs {
-		display: flex;
-		align-items: center;
-		border-bottom: 1px solid var(--border);
-		flex-shrink: 0;
-		background: var(--surface2);
-	}
-
-	.tab-btn {
-		padding: 10px 16px;
-		border: none;
-		background: none;
-		color: var(--text-muted);
-		font-size: 13px;
-		cursor: pointer;
-		border-bottom: 2px solid transparent;
-		transition: color 0.15s, border-color 0.15s;
-		white-space: nowrap;
-	}
-
-	.tab-btn:hover {
-		color: var(--text);
-	}
-
-	.tab-btn.active {
-		color: var(--accent);
-		border-bottom-color: var(--accent);
-		font-weight: 600;
-	}
-
-	.collapse-btn {
-		margin-left: auto;
-		font-size: 18px;
-		padding: 10px 14px;
-	}
-
-	.panel {
-		flex: 1;
-		overflow-y: auto;
-		overflow-x: hidden;
-	}
-
-	.layers-panel {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.divider {
-		height: 1px;
-		background: var(--border);
-		margin: 4px 0;
-	}
-
-	.expand-btn {
-		position: absolute;
-		top: 50%;
-		left: 0;
-		transform: translateY(-50%);
-		z-index: 100;
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-left: none;
-		border-radius: 0 6px 6px 0;
-		padding: 12px 6px;
-		cursor: pointer;
-		font-size: 18px;
-		color: var(--text-muted);
-		box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
-	}
-
-	.expand-btn:hover {
-		color: var(--accent);
-	}
-</style>

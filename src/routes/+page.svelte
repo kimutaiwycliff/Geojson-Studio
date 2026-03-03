@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import Map from '$lib/components/Map.svelte';
 	import Toolbar from '$lib/components/Toolbar.svelte';
@@ -7,21 +7,19 @@
 	import { addLayer } from '$lib/stores/layers.js';
 	import { decodeFromHash } from '$lib/utils/url-share.js';
 
-	// Apply dark mode class to <html>
+	// Toggle .dark class on <html> (shadcn + Tailwind standard)
 	$effect(() => {
-		document.documentElement.dataset.theme = $darkMode ? 'dark' : 'light';
+		document.documentElement.classList.toggle('dark', $darkMode);
 	});
 
-	// Restore from URL hash on first load
+	// Restore shared GeoJSON from URL hash
 	onMount(() => {
 		const hash = window.location.hash.slice(1);
 		if (hash) {
 			try {
 				const geojson = decodeFromHash(hash);
 				if (geojson) addLayer(geojson, 'Shared Layer');
-			} catch {
-				/* ignore bad hash */
-			}
+			} catch { /* ignore bad hash */ }
 		}
 	});
 </script>
@@ -31,56 +29,20 @@
 	<meta name="description" content="Browser-based GeoJSON editor and visualizer" />
 </svelte:head>
 
-<div class="app">
+<div class="flex h-screen flex-col overflow-hidden">
 	<Toolbar />
-	<div class="workspace">
+
+	<div class="relative flex-1 overflow-hidden">
 		<Map />
 		<Sidebar />
 	</div>
-	<div class="status-bar">
-		<span class="status-msg">{$statusMessage || 'Ready — drag & drop a GeoJSON file to get started'}</span>
-		<span class="coords">{$mouseCoords}</span>
+
+	<div class="flex h-[var(--statusbar-h)] shrink-0 items-center justify-between border-t bg-background px-3.5 z-50">
+		<span class="truncate text-[11px] text-muted-foreground">
+			{$statusMessage || 'Ready — drag & drop a GeoJSON file to get started'}
+		</span>
+		<span class="ml-4 shrink-0 font-mono text-[10px] text-muted-foreground">
+			{$mouseCoords}
+		</span>
 	</div>
 </div>
-
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-		overflow: hidden;
-	}
-
-	.workspace {
-		position: relative;
-		flex: 1;
-		overflow: hidden;
-	}
-
-	.status-bar {
-		height: var(--statusbar-h);
-		background: var(--surface);
-		border-top: 1px solid var(--border);
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0 14px;
-		font-size: 12px;
-		color: var(--text-muted);
-		flex-shrink: 0;
-		z-index: 200;
-	}
-
-	.status-msg {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.coords {
-		font-family: ui-monospace, 'Cascadia Code', monospace;
-		font-size: 11px;
-		flex-shrink: 0;
-		margin-left: 16px;
-	}
-</style>
