@@ -2,7 +2,7 @@
 
 > A fast, browser-based GeoJSON editor and map visualizer — no account, no API key, no backend.
 
-**[Live Demo →](https://geojson-studio.vercel.app)**
+**[Live Demo →](https://geojson-studio-delta.vercel.app)**
 
 ![GeoJSON Studio screenshot](https://via.placeholder.com/1200x630/1e293b/60a5fa?text=GeoJSON+Studio)
 
