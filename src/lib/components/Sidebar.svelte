@@ -5,6 +5,7 @@
 	import StyleEditor from './StyleEditor.svelte';
 	import TurfPanel from './TurfPanel.svelte';
 	import WfsPanel from './WfsPanel.svelte';
+	import MartinPanel from './MartinPanel.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -15,17 +16,20 @@
 		<Tabs.Root value="editor" class="flex flex-1 flex-col overflow-hidden">
 			<div class="flex items-center border-b bg-muted/40">
 				<Tabs.List class="h-10 rounded-none bg-transparent px-1 gap-0">
-					<Tabs.Trigger value="editor" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+					<Tabs.Trigger value="editor" class="rounded-none border-b-2 border-transparent px-3 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
 						Editor
 					</Tabs.Trigger>
-					<Tabs.Trigger value="layers" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+					<Tabs.Trigger value="layers" class="rounded-none border-b-2 border-transparent px-3 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
 						Layers
 					</Tabs.Trigger>
-					<Tabs.Trigger value="turf" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+					<Tabs.Trigger value="turf" class="rounded-none border-b-2 border-transparent px-3 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
 						Turf
 					</Tabs.Trigger>
-					<Tabs.Trigger value="wfs" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+					<Tabs.Trigger value="wfs" class="rounded-none border-b-2 border-transparent px-3 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
 						WFS
+					</Tabs.Trigger>
+					<Tabs.Trigger value="martin" class="rounded-none border-b-2 border-transparent px-3 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+						Martin
 					</Tabs.Trigger>
 				</Tabs.List>
 				<Button
@@ -55,6 +59,10 @@
 
 			<Tabs.Content value="wfs" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
 				<WfsPanel />
+			</Tabs.Content>
+
+			<Tabs.Content value="martin" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
+				<MartinPanel />
 			</Tabs.Content>
 		</Tabs.Root>
 	</aside>
