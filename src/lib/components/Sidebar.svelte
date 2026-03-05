@@ -4,6 +4,7 @@
 	import LayerList from './LayerList.svelte';
 	import StyleEditor from './StyleEditor.svelte';
 	import TurfPanel from './TurfPanel.svelte';
+	import WfsPanel from './WfsPanel.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -22,6 +23,9 @@
 					</Tabs.Trigger>
 					<Tabs.Trigger value="turf" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
 						Turf
+					</Tabs.Trigger>
+					<Tabs.Trigger value="wfs" class="rounded-none border-b-2 border-transparent px-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+						WFS
 					</Tabs.Trigger>
 				</Tabs.List>
 				<Button
@@ -47,6 +51,10 @@
 
 			<Tabs.Content value="turf" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
 				<TurfPanel />
+			</Tabs.Content>
+
+			<Tabs.Content value="wfs" class="flex-1 overflow-auto data-[state=inactive]:hidden mt-0">
+				<WfsPanel />
 			</Tabs.Content>
 		</Tabs.Root>
 	</aside>
