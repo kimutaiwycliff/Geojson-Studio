@@ -12,7 +12,7 @@
 </script>
 
 {#if $sidebarOpen}
-	<aside class="absolute left-0 top-0 bottom-0 z-10 flex w-[var(--sidebar-w)] flex-col border-r bg-background shadow-sm">
+	<aside class="absolute left-0 top-0 bottom-0 z-20 flex w-full sm:w-[var(--sidebar-w)] flex-col border-r bg-background shadow-xl sm:shadow-sm">
 		<Tabs.Root value="editor" class="flex flex-1 flex-col overflow-hidden">
 			<div class="flex items-center border-b bg-muted/40">
 				<Tabs.List class="h-10 rounded-none bg-transparent px-1 gap-0">
@@ -70,7 +70,7 @@
 	<Button
 		variant="outline"
 		size="icon-sm"
-		class="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-l-none border-l-0"
+		class="hidden sm:flex absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-l-none border-l-0"
 		onclick={() => sidebarOpen.set(true)}
 		title="Expand sidebar"
 	>
